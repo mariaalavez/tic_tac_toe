@@ -2,41 +2,62 @@ require 'byebug'
 
 class Board
 
-  attr_accessor :game
+  WP = [
+      [1, 2, 3],
+      [4, 5, 6],
+      [7, 8, 9],
+      [1, 4, 7],
+      [2, 5, 8],
+      [3, 6, 9],
+      [1, 5, 9],
+      [3, 5, 7]
+    ]
 
-  def initialize
-    @board = {
-      1 => '.', 2 => '.', 3 => '.',
-      4 => '.', 5 => '.', 6 => '.',
-      7 => '.', 8 => '.', 9 => '.',
-    }
-  end
-
-  def set_mark_at_position(position, mark)
-    #Places a mark on the board at a given position
-  end
-
-  def look_up_for_mark_at_position(position)
-    # Returns the mark at given position X, O or nil
-  end
-
-  def display_board
-    # Prints the board to the terminal with no format
-  end
-
-  def valid_position?(position)
-    # Returns true or false if position is an integer
-
-    allowed_positions = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-
-    if allowed_positions.include? position
-      @chosen_position = position
-    else
-      puts "This is not a valid position"
+    def initialize
+      @board = {
+        1 => '1', 2 => '2', 3 => '3',
+        4 => '4', 5 => '5', 6 => '6',
+        7 => '7', 8 => '8', 9 => '9',
+      }
     end
-  end
 
-  def valid_move?(position)
-    # REturns true or false if position is taken
-  end
+    def display_board
+      @board
+    end
+
+    def valid_position?(position)
+      allowed_positions = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+      return true if allowed_positions.include? position
+    end
+
+    def position_free?(position)
+      return true if @board[position].is_a? String
+    end
+
+    def set_mark_at_board(position, mark)
+      @board[position] = mark
+    end
+
+    def valid_and_free?(position)
+      return true if valid_position?(position) && position_free?(position)
+    end
+
+    def iterate_through_winning_positions
+      WP.each do |winning_position_array|
+        a = []
+        winning_position_array.each do |winning_position|
+          evaluated_positions = display_board[winning_position]
+          a << evaluated_positions
+        end
+        debugger
+        return a
+      end
+    end
+
+    def any_winner?(winning_position_array, mark)
+      if winning_position_array.select { |p| p.to_sym != mark }.empty?
+          puts "\n Player #{mark} won!!!"
+          return true
+      end
+    end
 end
